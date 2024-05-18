@@ -10,21 +10,22 @@ function acccountReducer(state = initialStateAccount, action) {
       return {
         ...state,
         isLoading: false,
-        balance: state.balance + action.payload,
+        balance: state.balance + (+action.payload),
       };
     case "account/convertingCurrency":
       return { ...state, isLoading: true };
     case "account/withdraw":
-      return { ...state, balance: state.balance - action.payload };
+      return { ...state, balance: state.balance - (+action.payload) };
     case "account/requestLoan":
       if (state.loan > 0) return state;
       return {
         ...state,
-        loan: action.payload,
+        loan: action.payload.amount,
         balance: state.balance + action.payload.amount,
         loanPurpose: action.payload.purpose,
       };
     case "account/payLoan":
+      if(state.loan>state.balance) return state;
       return {
         ...state,
         loan: 0,
